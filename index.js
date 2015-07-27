@@ -131,8 +131,8 @@ var options = {
     },
     gitRawCommitsOpts = {};
 
-if(from) {
-    options.from = from;
+if(from && from !== true) {
+    gitRawCommitsOpts.from = from;
 }
 
 changelog(options, context, gitRawCommitsOpts, parserOpts, writerOpts)
