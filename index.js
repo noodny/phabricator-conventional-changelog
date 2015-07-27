@@ -15,7 +15,7 @@ var meow = require('meow');
 var cli = meow({
     help: [
         'Usage',
-        '  changelog phabricator_host diffusion_id',
+        '  changelog phabricator_host diffusion_id [--from <tag>]',
         '',
         'Example',
         '  changelog my.phabricator.org MYPROJECT'
@@ -28,7 +28,12 @@ if(cli.input.length !== 2) {
 }
 
 var phabricatorHost = cli.input[0],
-    diffusionId = cli.input[1];
+    diffusionId = cli.input[1],
+    from = null;
+
+if(cli.flags && cli.flags.from) {
+    from = cli.flags.from;
+}
 
 var parserOpts = {
     headerPattern: /^(\w*)(?:\((.*)\))?\: (.*)$/,
@@ -125,6 +130,10 @@ var options = {
         issue: 'T'
     },
     gitRawCommitsOpts = {};
+
+if(from) {
+    options.from = from;
+}
 
 changelog(options, context, gitRawCommitsOpts, parserOpts, writerOpts)
     .pipe(file);
